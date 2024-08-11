@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         glossarySection.style.display = 'block';
         fetchUserPoints();
         fetchRandomWord();
+        checkIfCanCheckIn();
     }
 
     // Fetch and display the user's total knowledge points
@@ -89,9 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             alert('Failed to fetch knowledge points');
         }
-    }    
+    }
 
-    // Fetch and display a random word from the glossary
+    // Fetch and display a random word from the glossary based on the time interval
     function fetchRandomWord() {
         const glossary = {
             "'Abd": "A male slave.",
@@ -566,9 +567,41 @@ document.addEventListener('DOMContentLoaded', () => {
             "Zarnab": "A kind of good smelling grass.",
             "Zuhr": "Noon, mid-day prayer is called Zuhr prayer."
         };
+
         const keys = Object.keys(glossary);
-        const randomKey = keys[Math.floor(Math.random() * keys.length)];
+        let randomKey;
+
+        const currentTime = new Date();
+        if (currentTime.getHours() >= 4 && currentTime.getHours() < 12) {
+            randomKey = keys[0];  // First word for the morning
+        } else if (currentTime.getHours() >= 12 && currentTime.getHours() < 20) {
+            randomKey = keys[1];  // Second word for the afternoon
+        } else {
+            randomKey = keys[2];  // Third word for the evening
+        }
+
         document.getElementById('glossary-word').textContent = `${randomKey}: ${glossary[randomKey]}`;
+    }
+
+    // Check if the user can check in
+    async function checkIfCanCheckIn() {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:3000/can-check-in', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-access-token': token,
+            },
+        });
+
+        const data = await response.json();
+        const checkInButton = document.getElementById('check-in-button');
+        
+        if (data.status === 'ok') {
+            checkInButton.style.display = 'block';
+        } else {
+            checkInButton.style.display = 'none';
+        }
     }
 
     // Check-in functionality to update knowledge points
@@ -586,6 +619,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.status === 'ok') {
             alert('Knowledge points updated!');
             fetchUserPoints(); // Refresh points after check-in
+            checkIfCanCheckIn(); // Check if the button should be hidden
         } else {
             alert('Check-in failed');
         }

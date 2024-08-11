@@ -22,6 +22,11 @@ const UserSchema = new mongoose.Schema({
     username: { type: String, unique: true },
     password: String,
     knowledgePoints: { type: Number, default: 0 },
+    checkIns: {
+        morning: { type: Date, default: null },
+        afternoon: { type: Date, default: null },
+        evening: { type: Date, default: null },
+    },
 });
 
 const User = mongoose.model('User', UserSchema);
@@ -68,8 +73,27 @@ app.post('/update-points', async (req, res) => {
     try {
         const decoded = jwt.verify(token, 'secret123');
         const username = decoded.username;
-        await User.updateOne({ username }, { $inc: { knowledgePoints: 1 } });
-        return res.json({ status: 'ok' });
+        const user = await User.findOne({ username });
+
+        const currentTime = new Date();
+        let currentInterval;
+        
+        if (currentTime.getHours() >= 4 && currentTime.getHours() < 12) {
+            currentInterval = 'morning';
+        } else if (currentTime.getHours() >= 12 && currentTime.getHours() < 20) {
+            currentInterval = 'afternoon';
+        } else {
+            currentInterval = 'evening';
+        }
+
+        if (!user.checkIns[currentInterval] || new Date(user.checkIns[currentInterval]).getDate() !== currentTime.getDate()) {
+            user.checkIns[currentInterval] = currentTime;
+            user.knowledgePoints += 1;
+            await user.save();
+            return res.json({ status: 'ok', points: user.knowledgePoints });
+        } else {
+            return res.json({ status: 'error', error: 'Already checked in for this interval' });
+        }
     } catch (error) {
         return res.json({ status: 'error', error: 'Invalid token' });
     }
@@ -94,6 +118,35 @@ app.get('/leaderboard', async (req, res) => {
         res.json({ status: 'ok', users });
     } catch (error) {
         res.json({ status: 'error', error: 'Failed to fetch leaderboard' });
+    }
+});
+
+// Check if user can check in
+app.get('/can-check-in', async (req, res) => {
+    const token = req.headers['x-access-token'];
+    try {
+        const decoded = jwt.verify(token, 'secret123');
+        const username = decoded.username;
+        const user = await User.findOne({ username });
+
+        const currentTime = new Date();
+        let currentInterval;
+
+        if (currentTime.getHours() >= 4 && currentTime.getHours() < 12) {
+            currentInterval = 'morning';
+        } else if (currentTime.getHours() >= 12 && currentTime.getHours() < 20) {
+            currentInterval = 'afternoon';
+        } else {
+            currentInterval = 'evening';
+        }
+
+        if (!user.checkIns[currentInterval] || new Date(user.checkIns[currentInterval]).getDate() !== currentTime.getDate()) {
+            return res.json({ status: 'ok' });
+        } else {
+            return res.json({ status: 'error', error: 'Already checked in for this interval' });
+        }
+    } catch (error) {
+        return res.json({ status: 'error', error: 'Invalid token' });
     }
 });
 
