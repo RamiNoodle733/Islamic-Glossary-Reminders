@@ -1,0 +1,103 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
+
+// Initialize express app
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Replace with your MongoDB Atlas connection string
+mongoose.connect('mongodb+srv://RamiNoodle733:Ktrr8423!!@cluster0.wb8jv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('Could not connect to MongoDB', err));
+
+// Define User schema and model
+const UserSchema = new mongoose.Schema({
+    username: { type: String, unique: true },
+    password: String,
+    knowledgePoints: { type: Number, default: 0 },
+});
+
+const User = mongoose.model('User', UserSchema);
+
+// Serve the static files from the "public" directory
+app.use(express.static('public'));
+
+// Define a route for the root URL
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
+// Signup route
+app.post('/signup', async (req, res) => {
+    const { username, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    try {
+        const user = await User.create({ username, password: hashedPassword });
+        res.json({ status: 'ok', user });
+    } catch (err) {
+        res.json({ status: 'error', error: 'Duplicate username' });
+    }
+});
+
+// Login route
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    if (!user) {
+        return res.json({ status: 'error', error: 'Invalid login' });
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (isPasswordValid) {
+        const token = jwt.sign({ username: user.username }, 'secret123');
+        return res.json({ status: 'ok', token });
+    } else {
+        return res.json({ status: 'error', error: 'Invalid login' });
+    }
+});
+
+// Update knowledge points route
+app.post('/update-points', async (req, res) => {
+    const token = req.headers['x-access-token'];
+    try {
+        const decoded = jwt.verify(token, 'secret123');
+        const username = decoded.username;
+        await User.updateOne({ username }, { $inc: { knowledgePoints: 1 } });
+        return res.json({ status: 'ok' });
+    } catch (error) {
+        return res.json({ status: 'error', error: 'Invalid token' });
+    }
+});
+
+// Get user points route
+app.get('/user-points', async (req, res) => {
+    const token = req.headers['x-access-token'];
+    try {
+        const decoded = jwt.verify(token, 'secret123');
+        const user = await User.findOne({ username: decoded.username });
+        res.json({ status: 'ok', points: user.knowledgePoints });
+    } catch (error) {
+        res.json({ status: 'error', error: 'Failed to fetch points' });
+    }
+});
+
+// Leaderboard route
+app.get('/leaderboard', async (req, res) => {
+    try {
+        const users = await User.find().sort({ knowledgePoints: -1 }).limit(10); // Top 10 users
+        res.json({ status: 'ok', users });
+    } catch (error) {
+        res.json({ status: 'error', error: 'Failed to fetch leaderboard' });
+    }
+});
+
+// Start the server
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
+});
