@@ -1,7 +1,7 @@
-/* General styles */
+/* General body styling */
 body {
-    font-family: 'Amiri', serif; /* Use an Arabic style font */
-    background-color: #004d40; /* Dark green background */
+    font-family: 'Arial', sans-serif;
+    background-color: #055c1b; /* Deep green background */
     margin: 0;
     padding: 0;
     display: flex;
@@ -9,79 +9,163 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
-    color: #fff; /* Gold text color */
+    color: #d4af37; /* Gold text color */
 }
 
-/* Header styles */
 header {
-    background-color: #00695c; /* Darker green */
-    color: #ffd700; /* Gold color */
-    padding: 20px 0;
+    background-color: #044e17;
+    color: #ffffff;
+    padding: 20px 0; /* Increased padding for more prominence */
     width: 100%;
     text-align: center;
-    border-bottom: 4px solid #ffd700; /* Gold border */
+    border-bottom: 3px solid #e0c068; /* Thicker gold-yellow border */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow for header */
 }
 
-header h1 {
-    font-size: 2.5em;
-    font-weight: bold;
-}
-
-/* Navigation styles */
 nav a {
-    color: #ffd700; /* Gold */
-    margin: 0 15px;
+    color: #d4af37;
+    margin: 0 20px;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: bold; /* Bold navigation links for emphasis */
+    transition: color 0.3s ease;
 }
 
 nav a:hover {
-    text-decoration: underline;
+    color: #e0c068; /* Lighter gold on hover */
 }
 
-/* Main section styles */
 main {
-    background-color: #003d33; /* Darker green for contrast */
+    text-align: center;
+    width: 100%;
+    max-width: 900px;
+}
+
+/* Glossary and check-in specific styling */
+.glossary-box {
+    background-color: #0d9466; /* Green background */
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    width: 100%;
-    max-width: 500px;
-    border: 2px solid #ffd700; /* Gold border */
+    border: 2px solid #e0c068; /* Gold-yellow border */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Slightly larger shadow */
+    margin: 20px auto;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
 }
 
-h2 {
-    margin-top: 0;
-    color: #ffd700; /* Gold */
-}
-
-/* Form styles */
-input[type="text"], input[type="password"] {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #ffd700; /* Gold border */
-    background-color: #004d40; /* Match background */
-    color: #fff; /* Text color */
+.scroll-box {
+    max-height: 200px;  /* Set a maximum height for the glossary word container */
+    overflow-y: auto;   /* Enable vertical scrolling if content exceeds the height */
+    padding: 15px;
+    background-color: #053222;  /* Dark green box */
+    border-radius: 8px;
+    border: 1px solid #d4af37;  /* Gold border */
+    margin-bottom: 15px;
+    color: #ffffff; /* White text */
+    font-weight: bold; /* Bold for emphasis */
+    font-size: 1.5em; /* Larger text */
 }
 
 button {
     width: 100%;
-    padding: 10px;
-    background-color: #ffd700; /* Gold */
-    color: #004d40; /* Dark green text */
+    padding: 15px;
+    background-color: #e0c068; /* Bright gold-yellow button */
+    color: #003b2a; /* Dark green text on button */
     border: none;
-    border-radius: 5px;
+    border-radius: 8px; /* More rounded corners */
     cursor: pointer;
-    font-weight: bold;
+    font-size: 1.2em; /* Larger font size for buttons */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transition effects */
 }
 
 button:hover {
-    background-color: #ffcc00; /* Slightly lighter gold */
+    background-color: #d4af37; /* Slightly darker gold for hover */
+    transform: scale(1.05); /* Slight grow on hover */
 }
 
-p {
-    text-align: center;
-    color: #ffd700; /* Gold */
+button.disabled {
+    background-color: #a9a9a9; /* Greyed out button for disabled state */
+    cursor: not-allowed;
+}
+
+button.disabled:hover::after {
+    content: "You've already checked in for this word.";
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+.stats {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-align: right;
+    color: #f8e71c; /* Bold yellow */
+    font-weight: bold;
+}
+
+.stats p {
+    margin: 5px 0;
+    font-size: 1.2em; /* Adjusted size for stats text */
+}
+
+.timer {
+    margin-top: 20px;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #f8e71c; /* Bold yellow */
+}
+
+/* Separate styling for login page */
+.login-container {
+    background-color: #ffffff; /* White box for login */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 20px;
+}
+
+.login-title {
+    color: #0d9466; /* Green color for login title */
+    margin-bottom: 20px;
+    font-size: 1.8em; /* Larger font size for title */
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-form input[type="text"], 
+.login-form input[type="password"] {
+    width: 80%; /* Adjusted width */
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+}
+
+.login-button {
+    width: 85%; 
+    padding: 10px; /* Adjusted padding */
+    background-color: #8b7e34; /* Gold color */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.login-button:hover {
+    background-color: #7a6d30;
+    transform: scale(1.05);
 }

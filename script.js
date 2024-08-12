@@ -68,15 +68,16 @@ document.addEventListener('DOMContentLoaded', () => {
         loginSection.style.display = 'none';
         signupSection.style.display = 'none';
         glossarySection.style.display = 'block';
-        fetchUserPoints();
+        fetchUserStats();
         fetchRandomWord();
         checkIfCanCheckIn();
+        startCountdown(); // Start the countdown timer
     }
 
-    // Fetch and display the user's total knowledge points
-    async function fetchUserPoints() {
+    // Fetch and display the user's total knowledge points, streak, and multiplier
+    async function fetchUserStats() {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/user-points', {
+        const response = await fetch('http://localhost:3000/user-stats', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -84,11 +85,13 @@ document.addEventListener('DOMContentLoaded', () => {
             },
         });
         const data = await response.json();
-        console.log('Fetched points:', data.points);
+        console.log('Fetched stats:', data);
         if (data.status === 'ok') {
-            document.getElementById('total-points').textContent = data.points;
+            document.getElementById('total-points').textContent = data.points.toFixed(2);
+            document.getElementById('current-streak').textContent = data.streak;
+            document.getElementById('current-multiplier').textContent = data.multiplier.toFixed(2);
         } else {
-            alert('Failed to fetch knowledge points');
+            alert('Failed to fetch user stats');
         }
     }
 
@@ -596,16 +599,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const data = await response.json();
         const checkInButton = document.getElementById('check-in-button');
-        
+
         if (data.status === 'ok') {
             checkInButton.style.display = 'block';
+            checkInButton.classList.remove('disabled');
         } else {
-            checkInButton.style.display = 'none';
+            checkInButton.style.display = 'block';
+            checkInButton.classList.add('disabled');
         }
     }
 
     // Check-in functionality to update knowledge points
     document.getElementById('check-in-button').addEventListener('click', async () => {
+        if (document.getElementById('check-in-button').classList.contains('disabled')) return;
+
         const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:3000/update-points', {
             method: 'POST',
@@ -618,10 +625,42 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await response.json();
         if (data.status === 'ok') {
             alert('Knowledge points updated!');
-            fetchUserPoints(); // Refresh points after check-in
+            fetchUserStats(); // Refresh points, streak, and multiplier after check-in
             checkIfCanCheckIn(); // Check if the button should be hidden
         } else {
             alert('Check-in failed');
         }
     });
+
+    // Start the countdown timer for the next word
+    function startCountdown() {
+        const nextWordTime = new Date();
+        if (nextWordTime.getHours() >= 4 && nextWordTime.getHours() < 12) {
+            nextWordTime.setHours(12, 0, 0, 0);
+        } else if (nextWordTime.getHours() >= 12 && nextWordTime.getHours() < 20) {
+            nextWordTime.setHours(20, 0, 0, 0);
+        } else {
+            nextWordTime.setHours(4, 0, 0, 0);
+            nextWordTime.setDate(nextWordTime.getDate() + 1);
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            const remainingTime = nextWordTime - now;
+
+            const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+            const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+            document.getElementById('next-word-timer').textContent = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            if (remainingTime < 0) {
+                clearInterval(timerInterval);
+                location.reload(); // Reload the page when the time expires to fetch the new word
+            }
+        }
+
+        updateCountdown();
+        const timerInterval = setInterval(updateCountdown, 1000);
+    }
 });

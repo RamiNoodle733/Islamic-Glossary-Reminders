@@ -8,36 +8,43 @@
 </head>
 <body>
     <header>
-        <h1>Islamic Glossary Reminders</h1>
+        <h1>ISLAMIC GLOSSARY REMINDERS</h1>
         <nav>
             <a href="leaderboard.html">Leaderboard</a>
             <a href="#" id="logout">Logout</a>
         </nav>
     </header>
     <main>
-        <section id="login-section">
-            <h2>Login</h2>
-            <form id="login-form">
+        <!-- Separate styling for login page -->
+        <section id="login-section" class="login-container">
+            <h2 class="login-title">Login</h2>
+            <form id="login-form" class="login-form">
                 <input type="text" id="username" placeholder="Username" required>
                 <input type="password" id="password" placeholder="Password" required>
-                <button type="submit">Login</button>
+                <button type="submit" class="login-button">Login</button>
             </form>
             <p>Don't have an account? <a href="#" id="signup-link">Sign up</a></p>
         </section>
-        <section id="signup-section" style="display: none;">
-            <h2>Sign Up</h2>
-            <form id="signup-form">
+        <section id="signup-section" class="login-container" style="display: none;">
+            <h2 class="login-title">Sign Up</h2>
+            <form id="signup-form" class="login-form">
                 <input type="text" id="signup-username" placeholder="Username" required>
                 <input type="password" id="signup-password" placeholder="Password" required>
-                <button type="submit">Sign Up</button>
+                <button type="submit" class="login-button">Sign Up</button>
             </form>
             <p>Already have an account? <a href="#" id="login-link">Login</a></p>
         </section>
         <section id="glossary-section" style="display: none;">
-            <h2>Today's Word</h2>
-            <p id="glossary-word">...</p>
-            <button id="check-in-button">Check In</button>
-            <p>Total Knowledge Points: <span id="total-points">0</span></p>
+            <div class="glossary-box">
+                <div id="glossary-word" class="scroll-box">...</div>
+                <button id="check-in-button">Check In</button>
+            </div>
+            <div class="stats">
+                <p>KNOWLEDGE POINTS: <span id="total-points">0</span></p>
+                <p>Current Streak: <span id="current-streak">0</span></p>
+                <p>Multiplier: <span id="current-multiplier">1</span></p>
+            </div>
+            <p class="timer">Next Word: <span id="next-word-timer">0:00:00</span></p>
         </section>
     </main>
     <script src="script.js"></script>

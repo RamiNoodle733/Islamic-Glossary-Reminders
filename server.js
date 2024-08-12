@@ -22,6 +22,9 @@ const UserSchema = new mongoose.Schema({
     username: { type: String, unique: true },
     password: String,
     knowledgePoints: { type: Number, default: 0 },
+    streak: { type: Number, default: 0 },
+    multiplier: { type: Number, default: 1 },
+    lastCheckIn: { type: Date, default: null },
     checkIns: {
         morning: { type: Date, default: null },
         afternoon: { type: Date, default: null },
@@ -34,7 +37,6 @@ const User = mongoose.model('User', UserSchema);
 // Serve the static files from the "public" directory
 app.use(express.static('public'));
 
-// Define a route for the root URL
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
@@ -77,7 +79,7 @@ app.post('/update-points', async (req, res) => {
 
         const currentTime = new Date();
         let currentInterval;
-        
+
         if (currentTime.getHours() >= 4 && currentTime.getHours() < 12) {
             currentInterval = 'morning';
         } else if (currentTime.getHours() >= 12 && currentTime.getHours() < 20) {
@@ -86,9 +88,17 @@ app.post('/update-points', async (req, res) => {
             currentInterval = 'evening';
         }
 
+        const lastCheckIn = user.lastCheckIn ? new Date(user.lastCheckIn) : null;
+        const sameDay = lastCheckIn && lastCheckIn.toDateString() === currentTime.toDateString();
+
         if (!user.checkIns[currentInterval] || new Date(user.checkIns[currentInterval]).getDate() !== currentTime.getDate()) {
             user.checkIns[currentInterval] = currentTime;
-            user.knowledgePoints += 1;
+            if (!sameDay) {
+                user.streak++;
+                user.multiplier = Math.min(15, user.multiplier * 1.2); // Cap multiplier at 15
+            }
+            user.knowledgePoints += user.multiplier;
+            user.lastCheckIn = currentTime;
             await user.save();
             return res.json({ status: 'ok', points: user.knowledgePoints });
         } else {
@@ -99,15 +109,15 @@ app.post('/update-points', async (req, res) => {
     }
 });
 
-// Get user points route
-app.get('/user-points', async (req, res) => {
+// Get user stats route
+app.get('/user-stats', async (req, res) => {
     const token = req.headers['x-access-token'];
     try {
         const decoded = jwt.verify(token, 'secret123');
         const user = await User.findOne({ username: decoded.username });
-        res.json({ status: 'ok', points: user.knowledgePoints });
+        res.json({ status: 'ok', points: user.knowledgePoints, streak: user.streak, multiplier: user.multiplier });
     } catch (error) {
-        res.json({ status: 'error', error: 'Failed to fetch points' });
+        res.json({ status: 'error', error: 'Failed to fetch stats' });
     }
 });
 
