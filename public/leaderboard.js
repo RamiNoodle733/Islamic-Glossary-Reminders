@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const response = await fetch('http://localhost:3000/leaderboard', {
+    const response = await fetch('https://islamic-glossary-reminders.onrender.com/leaderboard', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

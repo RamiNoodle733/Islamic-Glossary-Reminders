@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch('https://islamic-glossary-reminders.onrender.com/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = document.getElementById('signup-username').value;
         const password = document.getElementById('signup-password').value;
 
-        const response = await fetch('http://localhost:3000/signup', {
+        const response = await fetch('https://islamic-glossary-reminders.onrender.com/signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fetch and display the user's total knowledge points, streak, and multiplier
     async function fetchUserStats() {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/user-stats', {
+        const response = await fetch('https://islamic-glossary-reminders.onrender.com/user-stats', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -589,7 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check if the user can check in
     async function checkIfCanCheckIn() {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/can-check-in', {
+        const response = await fetch('https://islamic-glossary-reminders.onrender.com/can-check-in', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -614,7 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('check-in-button').classList.contains('disabled')) return;
 
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/update-points', {
+        const response = await fetch('https://islamic-glossary-reminders.onrender.com/update-points', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
