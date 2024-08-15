@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const signupSection = document.getElementById('signup-section');
 
     let remainingWords = [];
+    let currentWord = null;
+    let currentInterval = null;
 
     // Toggle between login and signup forms
     signupLink.addEventListener('click', (event) => {
@@ -573,17 +575,30 @@ document.addEventListener('DOMContentLoaded', () => {
             "Zuhr": "Noon, mid-day prayer is called Zuhr prayer."
         };
 
-        // If remainingWords is empty, reset it with the full glossary
-        if (remainingWords.length === 0) {
-            remainingWords = Object.keys(glossary); // Reset and shuffle
-            shuffleArray(remainingWords);
+        // Determine current interval (morning, afternoon, evening)
+        const currentTime = new Date();
+        let newInterval;
+        if (currentTime.getHours() >= 4 && currentTime.getHours() < 12) {
+            newInterval = 'morning';
+        } else if (currentTime.getHours() >= 12 && currentTime.getHours() < 20) {
+            newInterval = 'afternoon';
+        } else {
+            newInterval = 'evening';
         }
 
-        // Get a random word from the remainingWords array
-        const randomKey = remainingWords.pop(); // Remove and get the last element
+        // Check if the interval has changed
+        if (newInterval !== currentInterval) {
+            currentInterval = newInterval;
+            // If interval changed, pick a new word
+            if (remainingWords.length === 0) {
+                remainingWords = Object.keys(glossary); // Reset and shuffle
+                shuffleArray(remainingWords);
+            }
+            currentWord = remainingWords.pop(); // Remove and get the last element
+        }
 
-        // Display the word
-        document.getElementById('glossary-word').textContent = `${randomKey}: ${glossary[randomKey]}`;
+        // Display the current word
+        document.getElementById('glossary-word').textContent = `${currentWord}: ${glossary[currentWord]}`;
     }
 
     // Function to shuffle an array
