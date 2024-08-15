@@ -170,30 +170,15 @@ button.disabled:hover::after {
     transform: scale(1.05);
 }
 
-
-/* Styling for explanation section */
-.info-container {
-    background-color: #0d9466; /* Same green background as other sections */
+/* About section styling */
+#about-section {
+    background-color: #ffffff;
+    color: #0d9466;
     padding: 20px;
     border-radius: 10px;
-    border: 2px solid #e0c068; /* Gold-yellow border */
-    margin: 20px auto;
-    width: 80%;
-    max-width: 600px;
-    text-align: center;
-    color: #ffffff; /* White text color */
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Slight shadow */
+    margin-top: 40px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 900px;
+    text-align: left;
 }
-
-.info-container h2 {
-    color: #e0c068; /* Gold-yellow color for title */
-    font-size: 1.8em; /* Larger font size for the title */
-    margin-bottom: 15px;
-}
-
-.info-container p {
-    font-size: 1.2em; /* Larger text for better readability */
-    line-height: 1.5em; /* Improved line spacing */
-    margin-bottom: 15px;
-}
-
