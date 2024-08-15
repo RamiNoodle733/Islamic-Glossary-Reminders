@@ -7,9 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginSection = document.getElementById('login-section');
     const signupSection = document.getElementById('signup-section');
 
-    let remainingWords = [];
-    let selectedWordForInterval = null;
-
     // Toggle between login and signup forms
     signupLink.addEventListener('click', (event) => {
         event.preventDefault();
@@ -72,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         signupSection.style.display = 'none';
         glossarySection.style.display = 'block';
         fetchUserStats();
-        fetchRandomWordForInterval();
+        fetchRandomWord();
         checkIfCanCheckIn();
         startCountdown(); // Start the countdown timer
     }
@@ -97,6 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Failed to fetch user stats');
         }
     }
+
+    // Fetch and display a random word from the glossary based on the time interval
 
     // Fetch and display a random word for the current interval without repetition
     function fetchRandomWordForInterval() {
