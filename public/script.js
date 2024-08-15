@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginSection = document.getElementById('login-section');
     const signupSection = document.getElementById('signup-section');
 
+    let remainingWords = [];
+
     // Toggle between login and signup forms
     signupLink.addEventListener('click', (event) => {
         event.preventDefault();
@@ -95,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Fetch and display a random word from the glossary based on the time interval
+    // Fetch and display a random word from the glossary without repetition until all words are used
     function fetchRandomWord() {
         const glossary = {
             "'Abd": "A male slave.",
@@ -571,19 +573,25 @@ document.addEventListener('DOMContentLoaded', () => {
             "Zuhr": "Noon, mid-day prayer is called Zuhr prayer."
         };
 
-        const keys = Object.keys(glossary);
-        let randomKey;
-
-        const currentTime = new Date();
-        if (currentTime.getHours() >= 4 && currentTime.getHours() < 12) {
-            randomKey = keys[0];  // First word for the morning
-        } else if (currentTime.getHours() >= 12 && currentTime.getHours() < 20) {
-            randomKey = keys[1];  // Second word for the afternoon
-        } else {
-            randomKey = keys[2];  // Third word for the evening
+        // If remainingWords is empty, reset it with the full glossary
+        if (remainingWords.length === 0) {
+            remainingWords = Object.keys(glossary); // Reset and shuffle
+            shuffleArray(remainingWords);
         }
 
+        // Get a random word from the remainingWords array
+        const randomKey = remainingWords.pop(); // Remove and get the last element
+
+        // Display the word
         document.getElementById('glossary-word').textContent = `${randomKey}: ${glossary[randomKey]}`;
+    }
+
+    // Function to shuffle an array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
     }
 
     // Check if the user can check in
