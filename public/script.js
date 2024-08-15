@@ -8,8 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const signupSection = document.getElementById('signup-section');
 
     let remainingWords = [];
-    let currentWord = null;
-    let currentInterval = null;
+    let selectedWordForInterval = null;
 
     // Toggle between login and signup forms
     signupLink.addEventListener('click', (event) => {
@@ -73,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         signupSection.style.display = 'none';
         glossarySection.style.display = 'block';
         fetchUserStats();
-        fetchRandomWord();
+        fetchRandomWordForInterval();
         checkIfCanCheckIn();
         startCountdown(); // Start the countdown timer
     }
@@ -99,8 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Fetch and display a random word from the glossary without repetition until all words are used
-    function fetchRandomWord() {
+    // Fetch and display a random word for the current interval without repetition
+    function fetchRandomWordForInterval() {
         const glossary = {
             "'Abd": "A male slave.",
             "'Ad": "An ancient tribe that lived after Noah. It was prosperous, but naughty and disobedient to Allah, so Allah destroyed it with violent destructive westerly wind.",
@@ -575,30 +574,33 @@ document.addEventListener('DOMContentLoaded', () => {
             "Zuhr": "Noon, mid-day prayer is called Zuhr prayer."
         };
 
-        // Determine current interval (morning, afternoon, evening)
         const currentTime = new Date();
-        let newInterval;
+        let currentInterval;
+
         if (currentTime.getHours() >= 4 && currentTime.getHours() < 12) {
-            newInterval = 'morning';
+            currentInterval = 'morning';
         } else if (currentTime.getHours() >= 12 && currentTime.getHours() < 20) {
-            newInterval = 'afternoon';
+            currentInterval = 'afternoon';
         } else {
-            newInterval = 'evening';
+            currentInterval = 'evening';
         }
 
-        // Check if the interval has changed
-        if (newInterval !== currentInterval) {
-            currentInterval = newInterval;
-            // If interval changed, pick a new word
+        // Check if a word has already been selected for this interval
+        const savedWordForInterval = localStorage.getItem(`word_${currentInterval}`);
+
+        if (savedWordForInterval) {
+            selectedWordForInterval = JSON.parse(savedWordForInterval);
+        } else {
             if (remainingWords.length === 0) {
                 remainingWords = Object.keys(glossary); // Reset and shuffle
                 shuffleArray(remainingWords);
             }
-            currentWord = remainingWords.pop(); // Remove and get the last element
+
+            selectedWordForInterval = remainingWords.pop();
+            localStorage.setItem(`word_${currentInterval}`, JSON.stringify(selectedWordForInterval));
         }
 
-        // Display the current word
-        document.getElementById('glossary-word').textContent = `${currentWord}: ${glossary[currentWord]}`;
+        document.getElementById('glossary-word').textContent = `${selectedWordForInterval}: ${glossary[selectedWordForInterval]}`;
     }
 
     // Function to shuffle an array
