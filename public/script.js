@@ -626,16 +626,13 @@ async function checkIfCanCheckIn() {
     const checkInButton = document.getElementById('check-in-button');
 
     if (data.status === 'ok') {
-        checkInButton.style.display = 'block';
         checkInButton.classList.remove('disabled');
-        checkInButton.disabled = false; // Ensure the button is enabled
+        checkInButton.disabled = false;
     } else {
-        checkInButton.style.display = 'block';
         checkInButton.classList.add('disabled');
-        checkInButton.disabled = true; // Disable the button if check-in is not allowed
+        checkInButton.disabled = true;
     }
 }
-
 
 
     // Check-in functionality to update knowledge points
