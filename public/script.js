@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginSection = document.getElementById('login-section');
     const signupSection = document.getElementById('signup-section');
 
+    let remainingWords = [];
+    let selectedWordForInterval = null;
+
     // Toggle between login and signup forms
     signupLink.addEventListener('click', (event) => {
         event.preventDefault();
@@ -69,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         signupSection.style.display = 'none';
         glossarySection.style.display = 'block';
         fetchUserStats();
-        fetchRandomWord();
+        fetchRandomWordForInterval();
         checkIfCanCheckIn();
         startCountdown(); // Start the countdown timer
     }
@@ -94,8 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Failed to fetch user stats');
         }
     }
-
-    // Fetch and display a random word from the glossary based on the time interval
 
     // Fetch and display a random word for the current interval without repetition
     function fetchRandomWordForInterval() {
@@ -620,18 +621,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 'x-access-token': token,
             },
         });
-
-        const data = await response.json();
-        const checkInButton = document.getElementById('check-in-button');
-
-        if (data.status === 'ok') {
-            checkInButton.style.display = 'block';
-            checkInButton.classList.remove('disabled');
-        } else {
-            checkInButton.style.display = 'block';
-            checkInButton.classList.add('disabled');
-        }
-    }
 
     // Check-in functionality to update knowledge points
     document.getElementById('check-in-button').addEventListener('click', async () => {
