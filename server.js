@@ -3,19 +3,19 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+require('dotenv').config(); // Load environment variables
 
 // Initialize express app
 const app = express();
 app.use(cors({
-    origin: 'https://islamic-glossary-reminders.onrender.com', //render url
+    origin: 'https://islamic-glossary-reminders.onrender.com', // Update with your Render URL
     methods: ['GET', 'POST'],
     credentials: true
 }));
-
 app.use(express.json());
 
-//mongodb url
-mongoose.connect('mongodb+srv://RamiNoodle733:Ktrr8423!!@cluster0.wb8jv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+// MongoDB connection using environment variable
+mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
@@ -43,7 +43,7 @@ const User = mongoose.model('User', UserSchema);
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/public/index.html');
 });
 
 // Signup route
