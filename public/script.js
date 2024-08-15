@@ -622,6 +622,19 @@ document.addEventListener('DOMContentLoaded', () => {
             },
         });
 
+        const data = await response.json();
+        const checkInButton = document.getElementById('check-in-button');
+
+        if (data.status === 'ok') {
+            checkInButton.style.display = 'block';
+            checkInButton.classList.remove('disabled');
+        } else {
+            checkInButton.style.display = 'block';
+            checkInButton.classList.add('disabled');
+        }
+    }
+
+
     // Check-in functionality to update knowledge points
     document.getElementById('check-in-button').addEventListener('click', async () => {
         if (document.getElementById('check-in-button').classList.contains('disabled')) return;
