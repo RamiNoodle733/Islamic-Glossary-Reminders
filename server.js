@@ -6,10 +6,15 @@ const cors = require('cors');
 
 // Initialize express app
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'https://islamic-glossary-reminders.onrender.com', //render url
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
+
 app.use(express.json());
 
-// Replace with your MongoDB Atlas connection string
+//mongodb url
 mongoose.connect('mongodb+srv://RamiNoodle733:Ktrr8423!!@cluster0.wb8jv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
