@@ -182,3 +182,25 @@ button.disabled:hover::after {
     max-width: 900px;
     text-align: left;
 }
+
+.about-container {
+    margin-top: 150px; /* Ensure the about section is below the login form */
+}
+
+body, html {
+    height: 100%; /* Ensure the page takes up full height */
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+main {
+    overflow-y: auto;
+    height: 100%;
+    padding-bottom: 50px; /* Prevent the content from touching the bottom */
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+    .about-container {
+        margin-top: 100px; /* Adjusted for smaller screens */
+    }
+}
