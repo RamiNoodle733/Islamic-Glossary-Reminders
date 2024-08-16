@@ -8,8 +8,9 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh;
     color: #d4af37; /* Gold text color */
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 header {
@@ -38,9 +39,9 @@ main {
     text-align: center;
     width: 100%;
     max-width: 900px;
-    overflow-y: auto;
-    height: 100%;
     padding-bottom: 50px; /* Prevent the content from touching the bottom */
+    overflow-y: auto;
+    flex: 1;
 }
 
 /* Glossary and check-in specific styling */
@@ -184,6 +185,7 @@ button.disabled:hover::after {
     width: 100%;
     max-width: 900px;
     text-align: left;
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .about-container {
@@ -192,12 +194,9 @@ button.disabled:hover::after {
 
 body, html {
     height: 100%; /* Ensure the page takes up full height */
-    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 main {
-    overflow-y: auto;
-    height: 100%;
     padding-bottom: 50px; /* Prevent the content from touching the bottom */
 }
 
