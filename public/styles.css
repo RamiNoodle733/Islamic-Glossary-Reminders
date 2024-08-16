@@ -8,9 +8,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
+    height: 100vh;
     color: #d4af37; /* Gold text color */
-    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 header {
@@ -39,9 +38,6 @@ main {
     text-align: center;
     width: 100%;
     max-width: 900px;
-    padding-bottom: 50px; /* Prevent the content from touching the bottom */
-    overflow-y: auto;
-    flex: 1;
 }
 
 /* Glossary and check-in specific styling */
@@ -172,37 +168,4 @@ button.disabled:hover::after {
 .login-button:hover {
     background-color: #7a6d30;
     transform: scale(1.05);
-}
-
-/* About section styling */
-#about-section {
-    background-color: #ffffff;
-    color: #0d9466;
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 40px;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 900px;
-    text-align: left;
-    overflow-x: hidden; /* Prevent horizontal scroll */
-}
-
-.about-container {
-    margin-top: 150px; /* Ensure the about section is below the login form */
-}
-
-body, html {
-    height: 100%; /* Ensure the page takes up full height */
-}
-
-main {
-    padding-bottom: 50px; /* Prevent the content from touching the bottom */
-}
-
-/* Adjustments for smaller screens */
-@media (max-width: 768px) {
-    .about-container {
-        margin-top: 100px; /* Adjusted for smaller screens */
-    }
 }
