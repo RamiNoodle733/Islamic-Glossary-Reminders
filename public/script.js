@@ -71,13 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
         loginSection.style.display = 'none';
         signupSection.style.display = 'none';
         glossarySection.style.display = 'block';
-        document.getElementById('about-section').style.display = 'none'; // Hide about section after login
         fetchUserStats();
         fetchRandomWordForInterval();
         checkIfCanCheckIn();
         startCountdown(); // Start the countdown timer
     }
-
 
     // Fetch and display the user's total knowledge points, streak, and multiplier
     async function fetchUserStats() {
