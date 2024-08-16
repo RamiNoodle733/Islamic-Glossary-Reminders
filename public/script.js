@@ -611,29 +611,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-// Check if the user can check in
-async function checkIfCanCheckIn() {
-    const token = localStorage.getItem('token');
-    const response = await fetch('https://islamic-glossary-reminders.onrender.com/can-check-in', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'x-access-token': token,
-        },
-    });
+    // Check if the user can check in
+    async function checkIfCanCheckIn() {
+        const token = localStorage.getItem('token');
+        const response = await fetch('https://islamic-glossary-reminders.onrender.com/can-check-in', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-access-token': token,
+            },
+        });
 
-    const data = await response.json();
-    const checkInButton = document.getElementById('check-in-button');
+        const data = await response.json();
+        const checkInButton = document.getElementById('check-in-button');
 
-    if (data.status === 'ok') {
-        checkInButton.classList.remove('disabled');
-        checkInButton.disabled = false;
-    } else {
-        checkInButton.classList.add('disabled');
-        checkInButton.disabled = true;
+        if (data.status === 'ok') {
+            checkInButton.classList.remove('disabled');
+            checkInButton.disabled = false;
+        } else {
+            checkInButton.classList.add('disabled');
+            checkInButton.disabled = true;
+        }
     }
-}
-
 
     // Check-in functionality to update knowledge points
     document.getElementById('check-in-button').addEventListener('click', async () => {

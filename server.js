@@ -39,6 +39,14 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', UserSchema);
 
+// Define Word schema and model for storing selected words
+const WordSchema = new mongoose.Schema({
+    interval: { type: String, unique: true }, // 'morning', 'afternoon', 'evening'
+    word: String
+});
+
+const Word = mongoose.model('Word', WordSchema);
+
 // Serve the static files from the "public" directory
 app.use(express.static('public'));
 
@@ -124,6 +132,39 @@ app.get('/user-stats', async (req, res) => {
     } catch (error) {
         res.json({ status: 'error', error: 'Failed to fetch stats' });
     }
+});
+
+// Fetch or generate word for interval route
+app.get('/word-for-interval', async (req, res) => {
+    const currentTime = new Date();
+    let currentInterval;
+
+    if (currentTime.getHours() >= 4 && currentTime.getHours() < 12) {
+        currentInterval = 'morning';
+    } else if (currentTime.getHours() >= 12 && currentTime.getHours() < 20) {
+        currentInterval = 'afternoon';
+    } else {
+        currentInterval = 'evening';
+    }
+
+    let wordForInterval = await Word.findOne({ interval: currentInterval });
+
+    if (!wordForInterval) {
+        const glossary = {
+            // Load or reference your glossary here
+        };
+        const remainingWords = Object.keys(glossary);
+        const randomIndex = Math.floor(Math.random() * remainingWords.length);
+        const selectedWord = remainingWords[randomIndex];
+
+        wordForInterval = new Word({
+            interval: currentInterval,
+            word: selectedWord
+        });
+        await wordForInterval.save();
+    }
+
+    res.json({ status: 'ok', word: wordForInterval.word });
 });
 
 // Leaderboard route
